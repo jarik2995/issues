@@ -21,21 +21,6 @@ def convert_to_seconds(t):
 	elif t[-1] == 'd':
 		s = t[:-1]*60*60*24
 	else: 
-		s = None 
-	return s
+		s = 0 
+	return int(s)
 
-
-columns = [
-    "id SERIAL PRIMARY KEY",
-    "ip VARCHAR(20)",
-    "issue_content VARCHAR(10000)",
-    "updated TIMESTAMP"
-  ]
-
-if not check_db_exist("issues"):
-  create_db("issues")
-if not check_user_exist("issues"):
-  create_user("issues", "123")
-grant_all_priv("issues", "issues")
-if not check_table_exist("host_issues"):
-  create_table("host_issues", columns)

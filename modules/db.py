@@ -1,8 +1,8 @@
 import psycopg2
 from psycopg2 import sql
 
-def conenct_db(config):
-    con = psycopg2.connect(config["user"], config["password"], config["host"], config["port"], config["database"])
+def connect_db(config):
+    con = psycopg2.connect(user=config["user"], password=config["password"], host=config["host"], port=config["port"], database=config["database"])
     return con
 
 def check_db_exist(con, db):
@@ -56,9 +56,9 @@ def update_query(con, table, data, cond):
     for k,v in data.items():
         data_s = data_s + "{} = {},".format(k,v)
     data_s = data_s[:-1]
-    cond_s = "{} = {}".format(cond_s["key"], cond_s["value"])
-    q = """ UPDATE %s SET %s WHERE %s """
-    cur.execute(q, (table, data_s, cond_s))
+    cond_s = "{} = {}".format(list(cond.keys())[0], list(cond.values())[0])
+    q = """ UPDATE {} SET {} WHERE {} """.format(table, data_s, cond_s)
+    cur.execute(q)
     con.commit()
 
 def insert_query(con, table, data):
@@ -67,16 +67,16 @@ def insert_query(con, table, data):
     values_s = ""
     for k,v in data.items():
         keys_s = keys_s + "{},".format(k)
-        values_s = values_s + "{},".format(k)
+        values_s = values_s + "'{}',".format(v)
     keys_s = keys_s[:-1]
     values_s = values_s[:-1]
-    q = """ INSERT INTO %s (%s) VALUES (%s) """
-    cur.execute(q, (table, keys_s, values_s))
+    q = """ INSERT INTO {} ({}) VALUES ({}) """.format(table, keys_s, values_s)
+    cur.execute(q)
     con.commit()
 
 def get_query(con, table, cols, cond):
     cur = con.cursor()
-    col_s = ",".join(cols)
-    cond_s = "{} = {}".format(cond_s["key"], cond_s["value"])
-    q = """ SELECT %s FROM %s WHERE %s """
-    cur.execute(q, (cols_s, table, cond_s))
+    cols_s = ",".join(cols)
+    cond_s = "{} = '{}'".format(list(cond.keys())[0], list(cond.values())[0])
+    q = """ SELECT {} FROM {} WHERE {} """.format(cols_s, table, cond_s)
+    cur.execute(q)

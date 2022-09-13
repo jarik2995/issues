@@ -8,7 +8,7 @@ app_config = {
 }
 
 ssh_config = {
-	"key_file": getenv("SSH_PRIVATE_KEY_FILE", "issues/tmp/id_rsa"),
+	"key_file": getenv("SSH_PRIVATE_KEY_FILE", "/tmp/id_rsa"),
 	"user": getenv("SSH_USER", "issues"),
 	"port": getenv("SSH_PORT", "22")
 }
