@@ -29,7 +29,7 @@ def worker_task(server):
             "issue_content": issue,
             "updated": get_timestamp()
         }
-        db.update_record(con, db_conf["table"], update_data, {"id":rid})
+        db.update_query(con, db_conf["table"], update_data, {"id":rid[0]})
     else:
         insert_data = {
             "ip": server["ip"],

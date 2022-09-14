@@ -4,7 +4,8 @@ from os import getenv
 app_config = {
 	"schedule_interval": getenv("SCHEDULE_INTERVAL", "10s"),
 	"hosts_inventory": getenv("HOSTS_INVENTORY", "http://127.0.0.1:5000/inventory"),
-	"issue_file": getenv("ISSUE_FILE", "/etc/issue")
+	"issue_file": getenv("ISSUE_FILE", "/etc/issue"),
+    "redis": getenv("REDIS", "localhost")
 }
 
 ssh_config = {
@@ -18,7 +19,8 @@ db_config = {
 	"database": getenv("DB_NAME", "issues"),
 	"port": getenv("DB_PORT", "5432"),
 	"host": getenv("DB_HOST", "localhost"),
-	"table": getenv("DB_TABLE", "host_issues")
+	"table": getenv("DB_TABLE", "host_issues"),
+    "postgres_pass": getenv("POSTGRES_PASSWORD", "123")
 }
 
 

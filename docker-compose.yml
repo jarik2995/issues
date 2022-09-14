@@ -1,0 +1,30 @@
+version: "2.1"
+services:
+  issues-scheduler:
+    image: issues-app
+    container_name: issues-scheduler
+    hostname: issues-scheduler
+    command: [ "celery", "-A", "issues.celery", "beat"]
+    env_file:
+      - .env
+  issues-worker:
+    image: issues-app
+    container_name: issues-worker
+    hostname: issues-worker
+    command: [ "celery", "-A", "issues.worker", "worker"]
+    env_file:
+      - .env
+    volumes:
+      - ${SSH_PRIVATE_KEY_FILE}:${SSH_PRIVATE_KEY_FILE}
+  issues-redis:
+    image: redis
+    container_name: issues-redis
+    hostname: issues-redis
+    env_file:
+      - .env
+  issues-postgres:
+    image: postgres
+    container_name: issues-postgres
+    hostname: issues-postgres
+    env_file:
+      - .env

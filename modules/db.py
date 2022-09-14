@@ -12,14 +12,14 @@ def check_db_exist(con, db):
     cur.execute(q, (db,))
     return cur.fetchone()
 
-def check_user_exist(u):
+def check_user_exist(con ,u):
     con.autocommit = True
     cur = con.cursor()
     q = """ SELECT 1 FROM pg_roles WHERE rolname = %s; """
     cur.execute(q, (u,))
     return cur.fetchone()
 
-def check_table_exist(tb):
+def check_table_exist(con, tb):
     con.autocommit = True
     cur = con.cursor()
     q = """ SELECT 1 FROM information_schema.tables WHERE table_name = %s; """
@@ -38,13 +38,13 @@ def create_table(con, tb, cols):
     q = """ CREATE TABLE {} ({}); """.format(tb, ",".join(cols))
     cur.execute(q)
 
-def create_user(u, pwd):
+def create_user(con, u, pwd):
     con.autocommit = True
     cur = con.cursor()
     q = sql.SQL("CREATE USER {} with encrypted password {};").format(sql.Identifier(u), sql.Literal(pwd))
     cur.execute(q)
 
-def grant_all_priv(u, db):
+def grant_all_priv(con, u, db):
     con.autocommit = True
     cur = con.cursor()
     q = sql.SQL("GRANT ALL PRIVILEGES ON DATABASE {} TO {}").format(sql.Identifier(db), sql.Identifier(u))
@@ -54,7 +54,7 @@ def update_query(con, table, data, cond):
     cur = con.cursor()
     data_s = ""
     for k,v in data.items():
-        data_s = data_s + "{} = {},".format(k,v)
+        data_s = data_s + "{} = '{}',".format(k,v)
     data_s = data_s[:-1]
     cond_s = "{} = {}".format(list(cond.keys())[0], list(cond.values())[0])
     q = """ UPDATE {} SET {} WHERE {} """.format(table, data_s, cond_s)
@@ -80,3 +80,11 @@ def get_query(con, table, cols, cond):
     cond_s = "{} = '{}'".format(list(cond.keys())[0], list(cond.values())[0])
     q = """ SELECT {} FROM {} WHERE {} """.format(cols_s, table, cond_s)
     cur.execute(q)
+    return cur.fetchone()
+
+def get_all(con, table, cols):
+    cur = con.cursor()
+    cols_s = ",".join(cols)
+    q = """ SELECT {} FROM {} """.format(cols_s, table)
+    cur.execute(q)
+    return cur.fetchall()
