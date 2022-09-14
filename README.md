@@ -22,7 +22,7 @@ ssh-keygen
 
 2. Copy .env_example to .env
 ```
-$ cp ./env_example ./env
+$ cp env_example .env
 ```
 
 3. If you have your own invetory and database server, please update .env with your variables. If you dont, leave it as it is and we are going to spin up test environment in next steps
